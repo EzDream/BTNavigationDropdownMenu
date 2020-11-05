@@ -384,7 +384,7 @@ open class BTNavigationDropdownMenu: UIView {
 
     override open func layoutSubviews() {
         self.menuTitle.sizeToFit()
-        self.menuTitle.center.x = self.menuButton.size.width/2
+        self.menuTitle.center.x = self.menuButton.frame.size.width/2
         self.menuTitle.center.y = self.frame.size.height/2
 //        self.menuTitle.center = CGPoint(x:  self.menuButton.size.width/2, y:  self.menuButton.size.height/2)
         self.menuTitle.textColor = self.configuration.menuTitleColor
