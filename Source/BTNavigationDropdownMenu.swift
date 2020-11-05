@@ -306,20 +306,24 @@ open class BTNavigationDropdownMenu: UIView {
 
         // Init button as navigation title
         self.menuButton = UIButton(frame: frame)
+        self.menuButton.center.x = self.center.x
         self.menuButton.addTarget(self, action: #selector(BTNavigationDropdownMenu.menuButtonTapped(_:)), for: UIControl.Event.touchUpInside)
         self.addSubview(self.menuButton)
 
+       
         self.menuTitle = UILabel(frame: frame)
+        
         self.menuTitle.text = titleToDisplay
         self.menuTitle.textColor = self.menuTitleColor
         self.menuTitle.font = self.configuration.navigationBarTitleFont
         self.menuTitle.textAlignment = self.configuration.cellTextLabelAlignment
         self.menuButton.addSubview(self.menuTitle)
-
+        
         self.menuArrow = UIImageView(image: self.configuration.arrowImage.withRenderingMode(.alwaysTemplate))
         self.menuButton.addSubview(self.menuArrow)
 
-        let menuWrapperBounds = window.bounds
+        var menuWrapperBounds = window.bounds
+        menuWrapperBounds.size.width = self.navigationController?.navigationBar.bounds.width ?? 0
 
         // Set up DropdownMenu
         self.menuWrapper = UIView(frame: CGRect(x: menuWrapperBounds.origin.x, y: 0, width: menuWrapperBounds.width, height: menuWrapperBounds.height))
@@ -332,6 +336,8 @@ open class BTNavigationDropdownMenu: UIView {
         self.backgroundView.backgroundColor = self.configuration.maskBackgroundColor
         self.backgroundView.autoresizingMask = [ .flexibleWidth, .flexibleHeight ]
 
+//        self.backgroundView.backgroundColor = UIColor.red
+        
         let backgroundTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(BTNavigationDropdownMenu.hideMenu));
         self.backgroundView.addGestureRecognizer(backgroundTapRecognizer)
 
@@ -378,7 +384,9 @@ open class BTNavigationDropdownMenu: UIView {
 
     override open func layoutSubviews() {
         self.menuTitle.sizeToFit()
-        self.menuTitle.center = CGPoint(x: self.frame.size.width/2, y: self.frame.size.height/2)
+        self.menuTitle.center.x = self.menuButton.size.width/2
+        self.menuTitle.center.y = self.frame.size.height/2
+//        self.menuTitle.center = CGPoint(x:  self.menuButton.size.width/2, y:  self.menuButton.size.height/2)
         self.menuTitle.textColor = self.configuration.menuTitleColor
         self.menuArrow.sizeToFit()
         self.menuArrow.center = CGPoint(x: self.menuTitle.frame.maxX + self.configuration.arrowPadding, y: self.frame.size.height/2)
@@ -516,8 +524,26 @@ open class BTNavigationDropdownMenu: UIView {
         })
     }
     
+    func updateLayout() {
+        let title = self.menuTitle.text ?? ""
+        let titleSize = (title as NSString).size(withAttributes: [NSAttributedString.Key.font:self.configuration.navigationBarTitleFont!])
+
+        // Set frame
+        let frame = CGRect(x: 0, y: 0, width: titleSize.width + (self.configuration.arrowPadding + self.configuration.arrowImage.size.width)*2, height: self.navigationController!.navigationBar.frame.height)
+        menuButton.frame.size = frame.size
+        menuButton.center.x = self.center.x
+    }
+    
     func setMenuTitle(_ title: String) {
         self.menuTitle.text = title
+        updateLayout()
+//        let titleSize = (title as NSString).size(withAttributes: [NSAttributedString.Key.font:self.configuration.navigationBarTitleFont])
+//
+//        // Set frame
+//        let frame = CGRect(x: 0, y: 0, width: titleSize.width + (self.configuration.arrowPadding + self.configuration.arrowImage.size.width)*2, height: self.navigationController!.navigationBar.frame.height)
+//        menuButton.frame.size = frame.size
+//        menuButton.center.x = self.center.x
+        
     }
     
     @objc func menuButtonTapped(_ sender: UIButton) {
