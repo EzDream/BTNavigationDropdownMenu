@@ -309,6 +309,7 @@ open class BTNavigationDropdownMenu: UIView {
 
         // Init button as navigation title
         self.menuButton = UIButton(frame: frame)
+        
         self.menuButton.center.x = self.center.x
         self.menuButton.addTarget(self, action: #selector(BTNavigationDropdownMenu.menuButtonTapped(_:)), for: UIControl.Event.touchUpInside)
         self.addSubview(self.menuButton)
@@ -535,6 +536,7 @@ open class BTNavigationDropdownMenu: UIView {
         // Set frame
         let frame = CGRect(x: 0, y: 0, width: titleSize.width + (self.configuration.arrowPadding + self.configuration.arrowImage.size.width)*2, height: self.navigationController!.navigationBar.frame.height)
         menuButton.frame.size = frame.size
+        self.frame = self.menuButton.frame
         menuButton.center.x = self.center.x
     }
     
