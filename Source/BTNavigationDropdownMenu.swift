@@ -219,7 +219,8 @@ open class BTNavigationDropdownMenu: UIView {
             self.configuration.shouldChangeTitleText = value
         }
     }
-
+    
+    open var didSelectIndex:Int = 0
     open var didSelectItemAtIndexHandler: ((_ indexPath: Int) -> ())?
     open var isShown: Bool!
 
@@ -228,7 +229,9 @@ open class BTNavigationDropdownMenu: UIView {
     fileprivate var topSeparator: UIView!
     fileprivate var menuButton: UIButton!
     fileprivate var menuTitle: UILabel!
-    fileprivate var menuArrow: UIImageView!
+    fileprivate lazy var menuArrow: UIImageView! = {
+        return UIImageView(image: self.configuration.arrowImage.withRenderingMode(.alwaysTemplate))
+    }()
     fileprivate var backgroundView: UIView!
     fileprivate var tableView: BTTableView!
     fileprivate var items: [String]!
@@ -319,7 +322,7 @@ open class BTNavigationDropdownMenu: UIView {
         self.menuTitle.textAlignment = self.configuration.cellTextLabelAlignment
         self.menuButton.addSubview(self.menuTitle)
         
-        self.menuArrow = UIImageView(image: self.configuration.arrowImage.withRenderingMode(.alwaysTemplate))
+//        self.menuArrow = UIImageView(image: self.configuration.arrowImage.withRenderingMode(.alwaysTemplate))
         self.menuButton.addSubview(self.menuArrow)
 
         var menuWrapperBounds = window.bounds
@@ -353,6 +356,7 @@ open class BTNavigationDropdownMenu: UIView {
             guard let selfie = self else {
                 return
             }
+            selfie.didSelectIndex = indexPath
             selfie.didSelectItemAtIndexHandler!(indexPath)
             if selfie.shouldChangeTitleText! {
                 selfie.setMenuTitle("\(selfie.tableView.items[indexPath])")
